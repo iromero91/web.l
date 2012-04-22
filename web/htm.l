@@ -5,6 +5,8 @@
 (def 'baseHRef nil) # Not necessary, call depends on *Port and *Host
 (def 'srcUrl prog) # Override this for another source URL
 
+(setq "css" (car (fish '((X) (= X "css")) html)))
+
 # Html response
 (de res-html (Ttl Css Attr . Prg)
    (res "text/html; charset=utf-8"
