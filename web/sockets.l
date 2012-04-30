@@ -54,14 +54,17 @@
          ((< L `(** 2 16)) (wr 126) (wr (>> 8 L)) (wr (& L 255)))
          ((< L `(** 2 64)) (wr 127) (for X 8 (wr (& 255 (>> (* 8 (- 8 X)) L)))))
          (T (bye)) ) )
-   (prin Msg)
+   (cond
+      ((sym? Msg) (prin Msg))
+      ((and (lst? Msg) (num? (car Msg))) (apply wr Msg) )
+      ((and (lst? Msg) (sym? (car Msg))) (prin Msg) )
+      (T (quit "Bad message data")) )
    (flush) )
 
 (de ws-send @
    (ws-write 1 T (pass pack)) )
 
 (de ws-handshake ()
-   (task *Sock) # Disable the other protocols
    (and
       (= (lowc (pack (cdr (assoc "upgrade" *Headers)))) "websocket") 
       (sub? "upgrade" (lowc (pack (cdr (assoc "connection" *Headers))))) 
@@ -79,7 +82,8 @@
                (prinl "Upgrade: websocket^M")
                (prinl "Sec-WebSocket-Accept: " (line) "^M")
                (prinl "^M") ) )
-         T ) ) )
+         T )
+      (task *Sock) ) ) # Disable the other protocols
 
 # Start listening to websocket events
 (de ws-start ()
@@ -90,7 +94,7 @@
          (let F (ws-frame)
             (case (pop 'F)
                (8 (bye))
-               (9 (out *Sock (ws-write 10 (pop 'F) (pack F))))
+               (9 (out *Sock (ws-write 10 (pop 'F) F)))
                (0
                   (setq *WsFin (pop 'F))
                   (if *WsOpcode (conc *WsPayload F)) )
