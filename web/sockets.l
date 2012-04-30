@@ -35,8 +35,7 @@
       #(or Mask (throw 'websocket))
       # Extended size?
       (when (>= Size 126)
-         (zero Size)
-         (do (if (= Size 126) 2 8)
+         (do (prog1 (if (= Size 126) 2 8) (zero Size))
             (setq Size (+ (>> -8 Size) (rd 1))) ) )
       # Get masking key
       (setq Mkey (if Mask (circ (rd 1) (rd 1) (rd 1) (rd 1)) (circ 0 0 0 0)))
@@ -47,19 +46,19 @@
                (link (x| (rd 1) (pop 'Mkey))) ) ) )
       (cons Opcode Fin Payload) ) )
 
-(de ws-write (F)
-   (wr (+ (pop 'F) (if (pop 'F) 128 0)))
-   (let L (length F)
+(de ws-write (Typ Fin Msg)
+   (wr (+ Typ (if Fin 128 0)))
+   (let L (size Msg)
       (cond
          ((< L 126) (wr L))
          ((< L `(** 2 16)) (wr 126) (wr (>> 8 L)) (wr (& L 255)))
          ((< L `(** 2 64)) (wr 127) (for X 8 (wr (& 255 (>> (* 8 (- 8 X)) L)))))
          (T (bye)) ) )
-   (prin F)
+   (prin Msg)
    (flush) )
 
-(de ws-send (M)
-   (ws-write (cons 1 T (chop M))) )
+(de ws-send @
+   (ws-write 1 T (pass pack)) )
 
 (de ws-handshake ()
    (task *Sock) # Disable the other protocols
@@ -91,7 +90,7 @@
          (let F (ws-frame)
             (case (pop 'F)
                (8 (bye))
-               (9 (out *Sock (ws-write (cons 10 F))))
+               (9 (out *Sock (ws-write 10 (pop 'F) (pack F))))
                (0
                   (setq *WsFin (pop 'F))
                   (if *WsOpcode (conc *WsPayload F)) )
