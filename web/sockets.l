@@ -81,8 +81,8 @@
                (prinl "^M") ) )
          T ) ) )
 
-# Handle a websocket connection
-(de ws-onmessage "Prg"
+# Start listening to websocket events
+(de ws-start ()
    (off *WsFin *WsPayload *WsOpcode)
    (setq "*OnMessage" "Prg")
    (task *Sock
@@ -98,5 +98,5 @@
                (T (setq *WsOpcode @ *WsFin (pop 'F) *WsPayload F)) ) )
          (when *WsFin
             (if (= *WsOpcode 1) (setq *WsPayload (decode-utf8 *WsPayload)))
-            (out *Sock (run "*OnMessage"))
+            (out *Sock (run *WsMsg))
             (off *WsFin *WsPayload *WsOpcode) ) ) ) ) 

@@ -6,9 +6,10 @@
       (httpStat 400 "Bad Request")
       (bye) )
    (tell *ChatPID 'chat-register *Pid)
-   (ws-onmessage
+   (de *WsMsg
       (tell *ChatPID 'chat-message *Pid (pack *WsPayload)) )
    (ws-send "** Notice: Welcome to the test chat server")
+   (ws-start)
    (loop
       (wait 1000) ) )
 
