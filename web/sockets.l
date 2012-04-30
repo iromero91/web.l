@@ -83,7 +83,7 @@
                (prinl "Sec-WebSocket-Accept: " (line) "^M")
                (prinl "^M") ) )
          T )
-      (task *Sock) ) ) # Disable the other protocols
+      (t (task *Sock)) ) ) # Disable the other protocols
 
 # Start listening to websocket events
 (de ws-start ()
