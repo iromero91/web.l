@@ -70,7 +70,7 @@
 (de get-form-data ()
    (use (@X)
       (cond
-         ((match '(~(chop "multipart/form-data; boundary=") @X) (header "content-type"))
+         ((match '(~(chop "multipart/form-data; boundary=") @X) *ContType)
           (setq
              *MPartLim (append '(- -) @X)
              *MPartEnd (append *MPartLim '(- -)) ) 
