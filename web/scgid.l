@@ -18,10 +18,9 @@
    (in S
       (let H (split
                 (make
-                   (do (format (till ":" T))
+                   (do (prog1 (format (till ":" T)) (char)) # Drop colon
                       (link (char (rd 1))) ) )
                 NIL )
-         (char) # Drop comma
          (while H
             (let (K (pop 'H) V (pop 'H)) 
                (case (pack K)
