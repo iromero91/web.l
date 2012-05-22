@@ -21,6 +21,7 @@
                    (do (format (till ":" T))
                       (link (char (rd 1))) ) )
                 NIL )
+         (char) # Drop comma
          (while H
             (let (K (pop 'H) V (pop 'H)) 
                (case (pack K)
