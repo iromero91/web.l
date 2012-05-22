@@ -31,7 +31,7 @@
                (throw "http") )
             (setq
                *Http1 (format @H)
-               *ReqMethod @M
+               *ReqMethod (pack @M)
                *ReqUri @U
                *PathInfo (if (dec (index "?" @U)) (head @ @U) @U)
                *QueryString (if (- (index "?" @U)) (tail @ @U)) )

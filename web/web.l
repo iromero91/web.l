@@ -5,6 +5,9 @@
 # *StatusPrefix should be HTTP/version for an HTTP server response
 (default *StatusPrefix "Status: ")
 
+(redef ht:Pack (Lst)
+   (ht:Pack (replace Lst "+" " ")) )
+
 (de urlDecode (X)
    (setq X (split X "="))
    (cons (ht:Pack (car X)) (ht:Pack (cadr X))) )
