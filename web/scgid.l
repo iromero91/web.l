@@ -21,11 +21,11 @@
                    (do (format (till ":" T))
                       (link (char (rd 1))) ) )
                 NIL )
-         (while (car H)
+         (while H
             (let (K (pop 'H) V (pop 'H)) 
                (case (pack K)
                   ("SERVER_PROTOCOL" (setq *Http1 (format (tail -1 V))))
-                  ("REQUEST_METHOD" (setq *ReqMethod V))
+                  ("REQUEST_METHOD" (setq *ReqMethod (pack V)))
                   ("PATH_INFO" (setq *PathInfo V))
                   ("REQUEST_URI" (setq *ReqUri V))
                   ("QUERY_STRING" (setq *QueryString V))
@@ -40,6 +40,6 @@
                         (push '*Headers
                            (cons
                               (pack (replace (tail -5 (chop (lowc @))) "_" "-"))
-                              (pop 'H) ) ) ) ) ) ) ) )
+                              V ) ) ) ) ) ) ) )
       (char) # Drop comma
       (out S (req-handler)) ) )
