@@ -17,10 +17,10 @@
    (zero *ContLen)
    (in S
       (let H (split
-                (make
-                   (do (prog1 (format (till ":" T)) (char)) # Drop colon
-                      (link (char (rd 1))) ) )
-                NIL )
+                (mapcar pack
+                   (ht:Read (prog1 (format (till ":" T)) (ht:Read 1))) )
+                NIL )  
+         (setq *RawSCGI H)  
          (while H
             (let (K (pop 'H) V (pop 'H)) 
                (case (pack K)
@@ -40,6 +40,6 @@
                         (push '*Headers
                            (cons
                               (pack (replace (tail -5 (chop (lowc @))) "_" "-"))
-                              V ) ) ) ) ) ) ) )
-      (char) # Drop comma
+                              V ) ) ) ) ) ) ) ) 
+      (ht:Read 1) #Drop comma
       (out S (req-handler)) ) )
