@@ -74,8 +74,12 @@
           (setq
              *MPartLim (append '(- -) @X)
              *MPartEnd (append *MPartLim '(- -)) ) 
-          (_htMultiPart) )
+          (make (_htMultipart)) )
          (*ContLen (mapcar urlDecode (split (ht:Read @) "&" ";"))) ) ) )
+
+(de _htSet ("Var" Val)
+   (link (list (ht:Pack "Var") Val))
+   Val )
 
 # rfc1867 multipart/form-data
 (de _htMultipart ()
@@ -103,8 +107,8 @@
             ((match '(@N ~(chop "; filename=") . @V) @X)
                (match '("\"" @N "\"") @N)
                (match '("\"" @V "\"") @V)
-               (if (_htSet @N (pack (stem @V '/ "\\")))
-                  (let F (tmp @)
+               (if (_htSet @N (tmp (pack (stem @V '/ "\\"))))
+                  (let F @
                      (unless (out F (echo (pack "^M^J" *MPartLim)))
                         (call 'rm "-f" F) ) )
                   (out "/dev/null" (echo (pack "^M^J" *MPartLim))) )
