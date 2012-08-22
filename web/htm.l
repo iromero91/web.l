@@ -7,6 +7,22 @@
 
 (setq "css" (car (fish '((X) (= X "css")) html)))
 
+(de <html> Prg
+   (prinl "<!DOCTYPE html>")
+   (prinl "<html>")
+   (run Prg 2)
+   (prinl "</html>") )
+(de <title> Prg (tag 'title NIL 2 Prg))
+(de <head> Prg (tag 'head NIL 2 Prg))
+(de <body> (Attr . Prg) (tag 'body Attr 2 Prg))
+(setq <css> "css")
+(de <javascript> (JS . @)
+   (when JS
+      (prinl "<script type=\"text/javascript\" src=\"" (srcUrl JS) "\"></script>") )
+   (when (rest)
+      (prinl "<script type=\"text/javascript\">" @ "</script>") ) )
+
+
 # Html response
 (de res-html (Ttl Css Attr . Prg)
    (res "text/html; charset=utf-8"
