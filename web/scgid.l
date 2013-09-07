@@ -35,6 +35,7 @@
                   ("HTTP_HOST" (setq *Host V))
                   ("HTTP_USER_AGENT" (setq *Agent V))
                   ("HTTP_REFERER" (setq *Referer V))
+                  ("REMOTE_ADDR" (setq *RemoteAddr V))
                   (T
                      (when (pre? "HTTP_" @)
                         (push '*Headers

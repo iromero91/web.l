@@ -49,7 +49,7 @@
                   ("content-length" (setq *ContLen (format @V)))
                   ("content-type" (setq *ContType @V) )
                   (T (push '*Headers (cons @ @V))) ) )
-            
+            (setq *RemoteAddr *Adr)
             (setq *StatusPrefix (pack "HTTP/1." *Http1 " "))
             (if (n0 *Http1) (on *Chunked))
             (out S (req-handler)) ) ) )  
